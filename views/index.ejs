@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Birthday Reminder</title>
+  <style>
+    /* Compact, responsive styling inspired by your files */
+    :root{--glass:rgba(255,255,255,0.12);--accent:#701fdb}
+    *{box-sizing:border-box;font-family:Segoe UI,system-ui,-apple-system,Arial}
+    body{min-height:100vh;margin:0;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,#6b11cb33 0%,#3b25fc 100%);padding:24px}
+    .card{width:100%;max-width:900px;background:var(--glass);border-radius:14px;padding:20px;
+      color:#fff;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08)}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    header h1{font-size:1.4rem;margin:0}
+    .grid{display:grid;grid-template-columns:1fr 420px;gap:18px;margin-top:18px}
+    form{background:rgba(0,0,0,0.06);padding:14px;border-radius:10px}
+    label{display:block;margin-bottom:6px;font-size:13px;color:rgba(255,255,255,0.9)}
+    input,textarea,select{width:100%;padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,0.06);
+      color:#fff;margin-bottom:12px;outline:none}
+    button{background:var(--accent);border:none;color:#fff;padding:10px 14px;border-radius:8px;cursor:pointer;width:100%}
+    .msg{padding:10px;border-radius:8px;margin-bottom:12px}
+    .error{background:rgba(255,0,0,0.12);border:1px solid rgba(255,0,0,0.18);color:#ffdede}
+    .success{background:rgba(0,200,100,0.12);border:1px solid rgba(0,200,100,0.18);color:#eafff0}
+    .list{max-height:420px;overflow:auto;padding:10px;background:rgba(0,0,0,0.04);border-radius:10px}
+    .user{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;
+      border:1px solid rgba(255,255,255,0.03);margin-bottom:10px;background:rgba(255,255,255,0.02)}
+    .user .meta{font-size:13px;color:rgba(255,255,255,0.9)}
+    .badge{background:#fff2;border-radius:16px;padding:6px 10px;font-weight:700;color:#0a0}
+    .small{font-size:12px;color:rgba(255,255,255,0.75)}
+    @media (max-width:880px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <header>
+      <h1>🎂 Birthday Reminder</h1>
+      <div class="small">Automatic emails sent daily at 7:00 AM</div>
+    </header>
+
+    <% if (error) { %>
+      <div class="msg error"><%= error %></div>
+    <% } %>
+    <% if (success) { %>
+      <div class="msg success"><%= success %></div>
+    <% } %>
+
+    <div class="grid">
+      <!-- Form: POSTs username, email, dateOfBirth (backend expects these names) -->
+      <div>
+        <form action="/" method="POST" autocomplete="off">
+          <label for="username">Full name</label>
+          <input id="username" name="username" type="text" required placeholder="Jane Doe" />
+
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email" required placeholder="jane@example.com" />
+
+          <label for="dateOfBirth">Date of birth</label>
+          <input id="dateOfBirth" name="dateOfBirth" type="date" required />
+
+          <!-- Optional fields visually present; backend must be updated to persist them if desired -->
+          <label for="phone">Phone (optional)</label>
+          <input id="phone" name="phone" type="tel" placeholder="+1234567890" />
+
+          <label for="notes">Notes (optional)</label>
+          <textarea id="notes" name="notes" rows="3" placeholder="e.g. favourite product or tag"></textarea>
+
+          <button type="submit">Save reminder</button>
+        </form>
+      </div>
+
+      <!-- Users list -->
+      <aside>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>Registered (<%= users ? users.length : 0 %>)</strong>
+          <a href="/" style="color:#fff;text-decoration:none;font-size:13px;opacity:0.85">Refresh</a>
+        </div>
+
+        <div class="list">
+          <% if (!users || users.length === 0) { %>
+            <div class="small">No birthdays saved yet. Add one using the form.</div>
+          <% } else { %>
+            <% users.forEach(function(user){ 
+                 const dob = new Date(user.dateOfBirth || user.dob || user.dobString);
+                 const today = new Date();
+                 const isToday = dob && today.getMonth() === dob.getMonth() && today.getDate() === dob.getDate();
+            %>
+              <div class="user">
+                <div>
+                  <div class="meta"><strong><%= user.username %></strong></div>
+                  <div class="small"><%= user.email %> • <%= dob && !isNaN(dob) ? dob.toLocaleDateString() : '—' %></div>
+                </div>
+                <div style="text-align:right">
+                  <% if (isToday) { %>
+                    <div class="badge">🎉 TODAY!</div>
+                  <% } else { %>
+                    <div class="small">Added: <%= new Date(user.createdAt).toLocaleDateString() %></div>
+                  <% } %>
+                </div>
+              </div>
+            <% }) %>
+          <% } %>
+        </div>
+      </aside>
+    </div>
+
+    <footer style="margin-top:16px;text-align:center;color:rgba(255,255,255,0.75);font-size:13px">
+      <div>Made with ⚡ by Mikatech/Crescentech</div>
+    </footer>
+  </div>
+</body>
+</html>
