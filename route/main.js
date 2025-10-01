@@ -16,8 +16,8 @@ router.get('/', async (req, res) => {
 // POST new user
 router.post('/', async (req, res) => {
   try {
-    const { username, email, dateOfBirth } = req.body;
-    const { error } = User.validate({ username, email, dateOfBirth });
+    const { username, email, dateOfBirth, phone, notes } = req.body;
+    const { error } = User.validate({ username, email, dateOfBirth, phone, notes });
     if (error) {
       const users = await User.find().sort({ createdAt: -1 });
       console.log(error);
@@ -29,9 +29,9 @@ router.post('/', async (req, res) => {
     }
     
 
-    const newUser = new User({ username, email, dateOfBirth });
+    const newUser = new User({ username, email, dateOfBirth, phone, notes });
     await newUser.save();
-    res.render('sucess', { message: 'User added successfully!' });
+    res.render('success', { message: 'User added successfully!' });
   } catch (error) {
     if (error.code === 11000) {
       const users = await User.find().sort({ createdAt: -1 });

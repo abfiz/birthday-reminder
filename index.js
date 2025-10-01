@@ -3,7 +3,6 @@ require('dotenv').config();
 const cron = require ("node-cron")
 const moment = require ("moment")
 const connect_DB = require("./config/mongoose")
-const path = require('path')
 const sendBirthdayEmails = require("./service/sendEmail")
 
 
@@ -13,6 +12,11 @@ PORT = process.env.PORT || 5000
 
 app.set("view engine", "ejs")
 app.set('views', 'views')
+
+// parse application/x-www-form-urlencoded (for form POSTs)
+app.use(express.urlencoded({ extended: true }));
+// parse application/json
+app.use(express.json());
 
 app.use('/', require('./route/main'));
 

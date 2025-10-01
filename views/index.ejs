@@ -1,113 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Birthday Reminder</title>
-  <style>
-    /* Compact, responsive styling inspired by your files */
-    :root{--glass:rgba(255,255,255,0.12);--accent:#701fdb}
-    *{box-sizing:border-box;font-family:Segoe UI,system-ui,-apple-system,Arial}
-    body{min-height:100vh;margin:0;display:flex;align-items:center;justify-content:center;
-      background:linear-gradient(135deg,#6b11cb33 0%,#3b25fc 100%);padding:24px}
-    .card{width:100%;max-width:900px;background:var(--glass);border-radius:14px;padding:20px;
-      color:#fff;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08)}
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px}
-    header h1{font-size:1.4rem;margin:0}
-    .grid{display:grid;grid-template-columns:1fr 420px;gap:18px;margin-top:18px}
-    form{background:rgba(0,0,0,0.06);padding:14px;border-radius:10px}
-    label{display:block;margin-bottom:6px;font-size:13px;color:rgba(255,255,255,0.9)}
-    input,textarea,select{width:100%;padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,0.06);
-      color:#fff;margin-bottom:12px;outline:none}
-    button{background:var(--accent);border:none;color:#fff;padding:10px 14px;border-radius:8px;cursor:pointer;width:100%}
-    .msg{padding:10px;border-radius:8px;margin-bottom:12px}
-    .error{background:rgba(255,0,0,0.12);border:1px solid rgba(255,0,0,0.18);color:#ffdede}
-    .success{background:rgba(0,200,100,0.12);border:1px solid rgba(0,200,100,0.18);color:#eafff0}
-    .list{max-height:420px;overflow:auto;padding:10px;background:rgba(0,0,0,0.04);border-radius:10px}
-    .user{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;
-      border:1px solid rgba(255,255,255,0.03);margin-bottom:10px;background:rgba(255,255,255,0.02)}
-    .user .meta{font-size:13px;color:rgba(255,255,255,0.9)}
-    .badge{background:#fff2;border-radius:16px;padding:6px 10px;font-weight:700;color:#0a0}
-    .small{font-size:12px;color:rgba(255,255,255,0.75)}
-    @media (max-width:880px){.grid{grid-template-columns:1fr}}
-  </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Birthday Reminder Form</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background: #f4f6f9;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+		}
+
+		.form-container {
+			background: #fff;
+			padding: 30px;
+			border-radius: 12px;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+			width: 360px;
+		}
+
+		.form-container h2 {
+			text-align: center;
+			margin-bottom: 20px;
+			color: #333;
+		}
+
+		.form-group {
+			margin-bottom: 15px;
+		}
+
+		.form-group label {
+			display: block;
+			margin-bottom: 6px;
+			font-size: 14px;
+			color: #555;
+		}
+
+		.form-group input,
+		.form-group textarea {
+			width: 100%;
+			padding: 10px;
+			font-size: 14px;
+			border: 1px solid #ccc;
+			border-radius: 8px;
+			outline: none;
+			transition: border 0.3s;
+			box-sizing: border-box;
+		}
+
+		.form-group input:focus,
+		.form-group textarea:focus {
+			border-color: #4a90e2;
+		}
+        textarea {
+            resize: none;
+        }
+
+		.btn-submit {
+			width: 100%;
+			padding: 12px;
+			background: #4a90e2;
+			color: #fff;
+			font-size: 16px;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			transition: background 0.3s;
+		}
+
+		.btn-submit:hover {
+			background: #357abd;
+		}
+		.small-note { font-size: 12px; color: #777; margin-top: 8px; text-align:center }
+	</style>
 </head>
 <body>
-  <div class="card">
-    <header>
-      <h1>🎂 Birthday Reminder</h1>
-      <div class="small">Automatic emails sent daily at 7:00 AM</div>
-    </header>
+	<div class="form-container">
+		<h2>Birthday Reminder</h2>
+		<% if (typeof error !== 'undefined' && error) { %>
+			<div style="background:#ffe6e6;color:#a80000;padding:10px;border-radius:6px;margin-bottom:12px;"> <%= error %> </div>
+		<% } %>
+		<% if (typeof success !== 'undefined' && success) { %>
+			<div style="background:#e6ffef;color:#087f3e;padding:10px;border-radius:6px;margin-bottom:12px;"> <%= success %> </div>
+		<% } %>
+		<form action="/" method="POST">
+			<div class="form-group">
+				<label for="username">Customer Name</label>
+				<input type="text" id="username" name="username" placeholder="Enter full name" required value="<%= typeof username !== 'undefined' ? username : '' %>">
+			</div>
 
-    <% if (error) { %>
-      <div class="msg error"><%= error %></div>
-    <% } %>
-    <% if (success) { %>
-      <div class="msg success"><%= success %></div>
-    <% } %>
+			<div class="form-group">
+				<label for="email">Customer Email</label>
+				<input type="email" id="email" name="email" placeholder="Enter email address" required value="<%= typeof email !== 'undefined' ? email : '' %>">
+			</div>
 
-    <div class="grid">
-      <!-- Form: POSTs username, email, dateOfBirth (backend expects these names) -->
-      <div>
-        <form action="/" method="POST" autocomplete="off">
-          <label for="username">Full name</label>
-          <input id="username" name="username" type="text" required placeholder="Jane Doe" />
+			<div class="form-group">
+				<label for="dateOfBirth">Date of Birth</label>
+				<input type="date" id="dateOfBirth" name="dateOfBirth" required value="<%= typeof dateOfBirth !== 'undefined' ? (new Date(dateOfBirth)).toISOString().substr(0,10) : '' %>">
+			</div>
 
-          <label for="email">Email address</label>
-          <input id="email" name="email" type="email" required placeholder="jane@example.com" />
+			<div class="form-group">
+				<label for="phone">Phone (optional)</label>
+				<input type="tel" id="phone" name="phone" placeholder="Phone number" value="<%= typeof phone !== 'undefined' ? phone : '' %>">
+			</div>
 
-          <label for="dateOfBirth">Date of birth</label>
-          <input id="dateOfBirth" name="dateOfBirth" type="date" required />
+			<div class="form-group">
+				<label for="notes">Notes (optional)</label>
+				<textarea id="notes" name="notes" rows="3" placeholder="Any extra info"><%= typeof notes !== 'undefined' ? notes : '' %></textarea>
+			</div>
 
-          <!-- Optional fields visually present; backend must be updated to persist them if desired -->
-          <label for="phone">Phone (optional)</label>
-          <input id="phone" name="phone" type="tel" placeholder="+1234567890" />
-
-          <label for="notes">Notes (optional)</label>
-          <textarea id="notes" name="notes" rows="3" placeholder="e.g. favourite product or tag"></textarea>
-
-          <button type="submit">Save reminder</button>
-        </form>
-      </div>
-
-      <!-- Users list -->
-      <aside>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <strong>Registered (<%= users ? users.length : 0 %>)</strong>
-          <a href="/" style="color:#fff;text-decoration:none;font-size:13px;opacity:0.85">Refresh</a>
-        </div>
-
-        <div class="list">
-          <% if (!users || users.length === 0) { %>
-            <div class="small">No birthdays saved yet. Add one using the form.</div>
-          <% } else { %>
-            <% users.forEach(function(user){ 
-                 const dob = new Date(user.dateOfBirth || user.dob || user.dobString);
-                 const today = new Date();
-                 const isToday = dob && today.getMonth() === dob.getMonth() && today.getDate() === dob.getDate();
-            %>
-              <div class="user">
-                <div>
-                  <div class="meta"><strong><%= user.username %></strong></div>
-                  <div class="small"><%= user.email %> • <%= dob && !isNaN(dob) ? dob.toLocaleDateString() : '—' %></div>
-                </div>
-                <div style="text-align:right">
-                  <% if (isToday) { %>
-                    <div class="badge">🎉 TODAY!</div>
-                  <% } else { %>
-                    <div class="small">Added: <%= new Date(user.createdAt).toLocaleDateString() %></div>
-                  <% } %>
-                </div>
-              </div>
-            <% }) %>
-          <% } %>
-        </div>
-      </aside>
-    </div>
-
-    <footer style="margin-top:16px;text-align:center;color:rgba(255,255,255,0.75);font-size:13px">
-      <div>Made with ⚡ by Mikatech/Crescentech</div>
-    </footer>
-  </div>
+			<button type="submit" class="btn-submit">Save Reminder</button>
+			<p class="small-note">We will store this information securely. You will see a confirmation page after saving.</p>
+		</form>
+	</div>
 </body>
 </html>
+
